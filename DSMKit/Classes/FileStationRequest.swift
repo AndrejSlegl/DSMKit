@@ -246,8 +246,8 @@ public enum FileStation: Namespace {
         }
         
         // TODO: ...
-        public static func download(path: String, mode: Mode) -> BasicRequestInfo<Data> {
-            return BasicRequestInfo<Data>(api: api, versions: 1...1) {
+        public static func download(path: String, mode: Mode) -> VanillaRequestInfo {
+            return VanillaRequestInfo(api: api, versions: 1...1) {
                 $0["path"] = path//, versions: 2...)
                 $0["mode"] = mode.rawValue
             }
