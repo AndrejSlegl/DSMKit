@@ -66,12 +66,16 @@ public struct DSMSong: Decodable {
         public let rating: Int
     }
     
+    public struct Additional: Decodable {
+        public let song_tag: Tag?
+        public let song_rating: Rating?
+    }
+    
     public let id: String
     public let path: String
     public let title: String
     public let type: String
-    public let song_tag: Tag?
-    public let song_rating: Rating?
+    public let additional: Additional?
 }
 
 public struct DSMPlaylist: Decodable {
