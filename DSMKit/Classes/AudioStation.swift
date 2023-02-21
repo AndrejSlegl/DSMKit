@@ -37,7 +37,7 @@ public enum AudioStation: Namespace {
 }
 
 public struct DSMAudioError: DSMError {
-    public typealias BaseError = DSMAudioError
+    public typealias BaseError = APIError
     public let rawValue: Int
     public init?(rawValue: Int) {
         self.rawValue = rawValue

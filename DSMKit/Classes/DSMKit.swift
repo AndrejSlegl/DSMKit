@@ -285,6 +285,8 @@ open class DSM {
     
     open lazy var urlSession = URLSession.shared
     
+    public static let sessionExpiredNotificationName = Notification.Name("DSM.sessionExpired")
+    
     open func get<T>(_ method: T, completion: @escaping (Data?, URLResponse?, Swift.Error?) -> Void) where T: RequestInfo {
         do {
             let url = try buildURL(info: method)
@@ -341,16 +343,22 @@ open class DSM {
         get(method) { (data, response, error) in
             print("<", method.api)
             guard let data = data else {
-//                print(error ?? response ?? "no response?")
                 completion(.failure(error ?? Error.invalidResponse))
                 return
             }
-            let result: Result<T.DataType, Swift.Error>
-                = Result(catching: { try decode(data: data) })
-//            if case let .failure(error) = result {
-//                print(#function, error, (error as? CustomNSError)?.errorUserInfo ?? [:], String(data: data, encoding: .utf8) ?? "not utf8?")
-//            }
-            completion(result)
+            do {
+                completion(.success(try decode(data: data)))
+            } catch {
+                let nsError = error as NSError
+                switch nsError.code {
+                case APIError.permission.rawValue, APIError.sessionTimedOut.rawValue:
+                    NotificationCenter.default.post(name: Self.sessionExpiredNotificationName, object: self)
+                default:
+                    break
+                }
+                
+                completion(.failure(error))
+            }
         }
     }
     
