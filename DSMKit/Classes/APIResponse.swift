@@ -63,6 +63,20 @@ public struct Response<T: Decodable>: Decodable {
         /// - Note: When there is no detailed information, this error element won’t be responded.
         public let errors: [FileErrorDetail]?
     
+        enum CodingKeys: CodingKey {
+            case code
+            case errors
+        }
+        
+        public init(from decoder: Decoder) throws {
+            let container = try decoder.container(keyedBy: CodingKeys.self)
+            self.code = try container.decode(Int.self, forKey: .code)
+            do {
+                self.errors = try container.decodeIfPresent([FileErrorDetail].self, forKey: .errors)
+            } catch {
+                self.errors = nil
+            }
+        }
     }
     
     public let error: Error?
