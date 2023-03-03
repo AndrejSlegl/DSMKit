@@ -6,6 +6,11 @@
 import Foundation
 
 public enum AudioStation: Namespace {
+    public static var asString: String {
+        let comp = String(reflecting: self).components(separatedBy: ".")
+        return comp.dropFirst().first ?? comp.first!
+    }
+    
     public enum Playlist: MethodContainer {
         public static func getPlaylists() -> BasicRequestInfo<PlaylistsResponse> {
             return BasicRequestInfo<PlaylistsResponse>(api: api, method: "list", versions: 1...3) { encoder in
