@@ -76,7 +76,10 @@ public enum API: Namespace {
                 otpCode.map { encoder.add(parameter: "otp_code", value: $0, availability: 3...) }
             }
         }
-            
+        
+        public static func logout() -> VanillaRequestInfo {
+            return VanillaRequestInfo(api: api, versions: 1...3) { _ in }
+        }
     }
     
 }
